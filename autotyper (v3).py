@@ -18,7 +18,7 @@ import pyscreenshot
 import pytesseract as tess
 import sys
 import getopt
-
+#test
 opacity = 0.6
 
 class Point(QGraphicsItem):
