@@ -18,16 +18,17 @@ import pyscreenshot
 import pytesseract as tess
 import sys
 import getopt
-#test
+
 opacity = 0.6
+
 
 class Point(QGraphicsItem):
     def __init__(self, x, y):
         super(Point, self).__init__()
         self.setFlag(QGraphicsItem.ItemIsSelectable, True)
         self.rectF = QRectF(0, 0, 30, 30)
-        self.x=x
-        self.y=y
+        self.x = x
+        self.y = y
         self._brush = QBrush(Qt.black)
 
     def setBrush(self, brush):
@@ -37,7 +38,7 @@ class Point(QGraphicsItem):
     def boundingRect(self):
         return self.rectF
 
-    def paint(self, painter=None, style=None, widget=None,):
+    def paint(self, painter=None, style=None, widget=None, ):
         painter.fillRect(self.rectF, self._brush)
 
     def hoverMoveEvent(self, event):
@@ -68,8 +69,7 @@ class Viewer(QGraphicsView):
         self.setWindowOpacity(opacity)
         self.setFrameShape(QFrame.NoFrame)
         self.area = float()
-
-
+        # self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
     def fitInView(self, scale=True):
         rect = QRectF(self.area)
@@ -81,10 +81,9 @@ class Viewer(QGraphicsView):
             viewrect = self.viewport().rect()
             scenerect = self.transform().mapRect(rect)
             factor = min(viewrect.width() / scenerect.width(),
-                             viewrect.height() / scenerect.height())
+                         viewrect.height() / scenerect.height())
             self.scale(factor, factor)
             self._zoom = 0
-
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -97,15 +96,13 @@ class Viewer(QGraphicsView):
             self.rubberBand.show()
             self.changeRubberBand = True
             return
-            #QGraphicsView.mousePressEvent(self,event)
+            # QGraphicsView.mousePressEvent(self,event)
         elif event.button() == Qt.MidButton:
             self.viewport().setCursor(Qt.CursorShape.ArrowCursor)
             self.original_event = event
-            handmade_event = QMouseEvent(QEvent.MouseButtonPress,QPointF(event.pos()),Qt.LeftButton,event.buttons(),Qt.KeyboardModifiers())
-            QGraphicsView.mousePressEvent(self,handmade_event)
-            
-            
-            
+            handmade_event = QMouseEvent(QEvent.MouseButtonPress, QPointF(event.pos()), Qt.LeftButton, event.buttons(),
+                                         Qt.KeyboardModifiers())
+            QGraphicsView.mousePressEvent(self, handmade_event)
 
         super(Viewer, self).mousePressEvent(event)
 
@@ -115,28 +112,24 @@ class Viewer(QGraphicsView):
             global cmx2, cmy2
             cmx2, cmy2 = pyautogui.position()
             print(cmx2, cmy2)
-            QGraphicsView.mouseReleaseEvent(self,event)
-            #sys.exit()
-            #run autotyper function
+            QGraphicsView.mouseReleaseEvent(self, event)
+            # sys.exit()
+            # run autotyper function
             window.hide()
             autotyper()
         elif event.button() == Qt.MidButton:
             self.viewport().setCursor(Qt.OpenHandCursor)
-            handmade_event = QMouseEvent(QEvent.MouseButtonRelease,QPointF(event.pos()),Qt.LeftButton,event.buttons(),Qt.KeyboardModifiers())
-            QGraphicsView.mouseReleaseEvent(self,handmade_event)
+            handmade_event = QMouseEvent(QEvent.MouseButtonRelease, QPointF(event.pos()), Qt.LeftButton,
+                                         event.buttons(), Qt.KeyboardModifiers())
+            QGraphicsView.mouseReleaseEvent(self, handmade_event)
         super(Viewer, self).mouseReleaseEvent(event)
-        
-    
-      
-
 
     def mouseMoveEvent(self, event):
         if self.changeRubberBand:
             self.rubberBand.setGeometry(QRect(self.origin, event.pos()).normalized())
             self.rectChanged.emit(self.rubberBand.geometry())
-            QGraphicsView.mouseMoveEvent(self,event)
+            QGraphicsView.mouseMoveEvent(self, event)
         super(Viewer, self).mouseMoveEvent(event)
-
 
 
 class Window(QWidget):
@@ -144,14 +137,10 @@ class Window(QWidget):
         super(Window, self).__init__()
         self.viewer = Viewer(self)
         self.setWindowOpacity(opacity)
-        
-        
-
-
 
         VBlayout = QVBoxLayout(self)
         VBlayout.addWidget(self.viewer)
-        
+
 
 def autotyper():
     tess.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
@@ -159,12 +148,12 @@ def autotyper():
     nonbreak = True
     abc = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuopasdfghjklizxcvbnm1234567890.,()'`/\-+<>:;!@#$%^&*\[]"
     while 1:
-        #print(Fore.BLUE + "Press 1 when your cursor is on top left corner of the area you want to scan")
-        #keyboard.wait("1")
-        #cmx1, cmy1 = pyautogui.position()
-        #print(Fore.BLUE + "Press 2 when your cursor is on bottom right corner of the area you want to scan")
-        #keyboard.wait("2")
-        #cmx2, cmy2 = pyautogui.position()
+        # print(Fore.BLUE + "Press 1 when your cursor is on top left corner of the area you want to scan")
+        # keyboard.wait("1")
+        # cmx1, cmy1 = pyautogui.position()
+        # print(Fore.BLUE + "Press 2 when your cursor is on bottom right corner of the area you want to scan")
+        # keyboard.wait("2")
+        # cmx2, cmy2 = pyautogui.position()
         print(
             Fore.GREEN + "Click enter when your cursor is in the position you want for it to type, it will automatically click and start to type everything that is in the area you selected")
         keyboard.wait("enter")
@@ -191,14 +180,13 @@ def autotyper():
         time.sleep(0.01)
 
 
-
 if __name__ == '__main__':
     import sys
+
     app = QApplication(sys.argv)
     window = Window()
     geometry = app.desktop().availableGeometry()
     geometry.setHeight(geometry.height())
     window.setGeometry(geometry)
-    window.show() 
+    window.show()
     sys.exit(app.exec_())
-
