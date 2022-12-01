@@ -1,23 +1,13 @@
-from asyncio import events
-from cgi import print_environ
-from email.mime import application, image
-from tkinter import Widget
-from turtle import color
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-import sys
-from math import sqrt
-import pyautogui
-from colorama import Fore, Back, Style
-import keyboard
 import time
-import random
+
+import keyboard
 import pyautogui
 import pyscreenshot
 import pytesseract as tess
-import sys
-import getopt
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from colorama import Fore
 
 opacity = 0.6
 
